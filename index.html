@@ -1,0 +1,777 @@
+<!--
+Copyright (c) 2014, Duncan Ford
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL DUNCAN FORD BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<head>
+
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="http://codemirror.net/lib/codemirror.js"></script>
+	<script src="http://codemirror.net/mode/javascript/javascript.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://codemirror.net/mode/javascript/javascript.css">
+	<link rel="stylesheet" type="text/css" href="http://codemirror.net/lib/codemirror.css">
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<style>
+		#code {
+			border: 1px solid black;
+		}
+		body {
+			background:#FFF;
+			color: #000;
+		}
+		.CodeMirror {
+			height: auto;
+		}
+
+		.bs-callout {
+			padding: 20px;
+			margin: 20px 0px;
+			border-width: 1px 1px 1px 5px;
+			border-style: solid;
+			border-color: #EEE;
+			-moz-border-top-colors: none;
+			-moz-border-right-colors: none;
+			-moz-border-bottom-colors: none;
+			-moz-border-left-colors: none;
+			border-image: none;
+			border-radius: 3px;
+		}
+
+		.bs-callout-info {
+			border-left-color: #5BC0DE;
+		}
+
+		.bs-callout-danger {
+			border-left-color: #D9534F;
+		}
+	</style>
+</head>
+
+<div class="container">
+<H1>Open UI PW Code Template Generator</H1>
+    <p>Or perhaps you were looking for the <a href="http://tiny.cc/prpm-code-generator">PR/PM generator?</a></p>
+<div class="bs-callout bs-callout-danger">If something doesn't look right, try a modern browser</div>
+
+<H2>Configure your PW (Plugin Wrapper)</H2>
+<form class="form-horizontal" role="form">
+    <div class="form-group">
+        <label for "Object" class="col-sm-2 control-label">Control Type</label>
+        <div class="col-sm-8">
+            <select class="form-control" id="Object">
+                <option value="Field" selected>Generic Field</option>
+                <option value="Button">Button</option>
+                <option value="Calculator">Calculator</option>
+                <option value="CheckBox">CheckBox</option>
+                <option value="Radio">Radio Buttons</option>
+                <option value="Date">Date</option>
+                <option value="DateTime">Date Time</option>
+                <option value="DateTimeZone">Date TimeZone</option>
+                <option value="DropDown">Drop Down (ComboBox)</option>
+                <option value="File">File Picker</option>
+                <option value="FlipSwitch">Flip Switch</option>
+                <option value="Email">E-Mail</option>
+                <option value="URL">URL</option>
+                <option value="Link">Link</option>
+                <option value="Label">Label</option>
+                <option value="Route">Route</option>
+                <option value="PlainText">Plain Text</option>
+                <option value="ImageControl">Image Control</option>
+                <option value="RTCEditor">Rich Text Editor</option>
+                <option value="Rating">Rating</option>
+                <option value="Text">Text</option>
+                <option value="TextArea">Text Area</option>
+                <option value="Password">Password</option>
+                <option value="Pick">Pick</option>
+                <option value="MVG">MVG</option>
+                <option value="EffectiveDate">Effective Date</option>
+                <option value="Currency">Currency</option>
+                <option value="Sign">Signature Capture</option>
+                <option value="Chart">Chart</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for "Namer" class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-8">
+            <input id="Namer" class="form-control" value="Slider" placeholder="Name"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for "Comments" class="col-sm-2 control-label">Sprinkle comments?</label>
+        <div class="col-sm-8">
+            <label class="radio-inline">
+                <input type="radio" name="Comments" id="Comments" value="Yes" checked>Yes</input>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="Comments" id="Comments" value="No"> No</input>
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for "Logging" class="col-sm-2 control-label">Add Logging?</label>
+        <div class="col-sm-8">
+            <label class="radio-inline">
+                <input type="radio" name="Logging" id="Logging" value="Yes">Yes</input>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="Logging" id="Logging" value="No" checked> No</input>
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for "Methods" class="col-sm-2 control-label">Select Methods</label>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="I" checked/>
+                    Init
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="SU" checked/>
+                    ShowUI
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="BE"/>
+                    BindEvents
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="BD"/>
+                    BindData
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-1 col-sm-offset-1">
+            <button type="button" class="btn btn-default center-block" id="ALL">All</button>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="GV"/>
+                    GetValue
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="SV"/>
+                    SetValue
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="BQ"/>
+                    BeginQuery
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="EQ"/>
+                    EndQuery
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-1 col-sm-offset-1">
+            <button type="button" class="btn btn-default center-block" id="NONE">None</button>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="OP"/>
+                    OpenPopup
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="CP"/>
+                    ClosePopup
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="HK"/>
+                    HandleKey
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="SS"/>
+                    SetState
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="EL"/>
+                    EndLife
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="IQ"/>
+                    InjectQTPInfo
+                </label>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="bs-callout bs-callout-info" id="instruction"></div>
+<div id="code" class="code"></div>
+</div>
+
+<script>
+	var addComments = true;
+	var addLogging = false;
+	var tweaked = false;
+	var cm;
+	var init=true;
+	var strCode;
+	var cbI=true,  cbSU=true, cbBE, cbBD;
+	var cbGV, cbSV, cbBQ, cbEQ;
+	var cbOP, cbCP, cbHK, cbSS;
+	var cbEL, cbIQ;
+	integration = "N";
+	try {
+		integration = getQueryVariable("integration");
+	}
+	catch(e){}
+
+	var storeDefExtPW = {
+			"Field-ext": 'FieldPW',
+			"Field-const": 'SWE_CTRL_TEXT',
+			"Text-ext": 'FieldPW',
+			"Text-const": 'SWE_CTRL_TEXT',
+			"TextArea-ext": 'FieldPW',
+			"TextArea-const": 'SWE_CTRL_TEXTAREA',
+			"Password-ext": 'FieldPW',
+			"Password-const": 'SWE_CTRL_PWD',
+			"Pick-ext": 'FieldPW',
+			"Pick-const": 'SWE_CTRL_PICK',
+			"MVG-ext": 'FieldPW',
+			"MVG-const": 'SWE_CTRL_MVG',
+			"EffectiveDate-ext": 'FieldPW',
+			"EffectiveDate-const": 'SWE_CTRL_EFFDAT',
+			"Currency-ext": 'FieldPW',
+			"Currency-const": 'SWE_CTRL_CURRENCY_CALC',
+			"Button-ext": 'ButtonPW',
+			"Button-const": 'SWE_PST_BUTTON_CTRL',
+			"Calculator-ext": 'CalculatorPW',
+			"Calculator-const": 'SWE_CTRL_CALC',
+			"CheckBox-ext": 'CheckBoxPW',
+			"CheckBox-const": 'SWE_CTRL_CHECKBOX',
+			"Radio-ext": 'RadioPW',
+			"Radio-const": 'SWE_CTRL_RADIO',
+			"Date-ext": 'DatePW',
+			"Date-const": 'SWE_CTRL_DATE_PICK',
+			"DateTime-ext": 'DatePW',
+			"DateTime-const": 'SWE_CTRL_DATE_PICK',
+			"DateTimeZone-ext": 'DatePW',
+			"DateTimeZone-const": 'SWE_CTRL_DATE_PICK',
+			"DropDown-ext": 'DropDownPW',
+			"DropDown-const": 'SWE_CTRL_COMBOBOX',
+			"File-ext": 'FilePW',
+			"File-const": 'SWE_CTRL_FILE',
+			"Radio-ext": 'PhysicalRenderer',
+			"Radio-const": 'SWE_CTRL_RADIO',
+			"FlipSwitch-ext": 'FlipSwitchPW',
+			"FlipSwitch-const": 'SWE_CTRL_CHECKBOX',
+			"Email-ext": 'LinkPW',
+			"Email-const": 'SWE_CTRL_MAILTO',
+			"URL-ext": 'LinkPW',
+			"URL-const": 'SWE_CTRL_URL',
+			"Link-ext": 'LinkPW',
+			"Link-const": 'SWE_CTRL_LINK',
+			"Label-ext": 'LinkPW',
+			"Label-const": 'SWE_CTRL_LABEL',
+			"Route-ext": 'RoutePW',
+			"Route-const": 'SWE_PST_BUTTON_CTRL',
+			"PlainText-ext": 'PlainTextPW',
+			"PlainText-const": 'SWE_CTRL_PLAINTEXT',
+			"ImageControl-ext": 'ImgCtrlPW',
+			"ImageControl-const": 'SWE_CTRL_IMAGECONTROL',
+			"RTCEditor-ext": 'RTCEditorPW',
+			"RTCEditor-const": 'SWE_CTRL_RTCEMBEDDED',
+			"Rating-ext": 'RatingPW',
+			"Rating-const": 'SWE_CTRL_COMBOBOX',
+			"Sign-ext": 'SignPW',
+			"Sign-const": 'SWE_CTRL_INKDATA',
+			"Chart-ext": 'ChartBuilderPW',
+			"Chart-const": 'SWE_CTRL_CHARTCONTROL'
+	}
+
+	$("#Object").on("change", function () {
+		GenerateCode()
+	});
+	$("#PRPM").on("change", function () {
+		GenerateCode()
+	});
+	$("#Namer").on("keyup", function () {
+		GenerateCode()
+	});
+	$("input:radio[name=Logging]").click(function () {
+		debugger;
+		addLogging = $(this).val() == "Yes";
+		GenerateCode();
+	});
+	$("input:radio[name=Comments]").click(function () {
+		addComments = $(this).val() == "Yes";
+		GenerateCode();
+	});
+	$("#I").on("change", function () {
+		cbI=this.checked;
+		GenerateCode()
+	});
+	$("#SU").on("change", function () {
+		cbSU=this.checked;
+		GenerateCode()
+	});
+	$("#BE").on("change", function () {
+		cbBE=this.checked;
+		GenerateCode()
+	});
+	$("#BD").on("change", function () {
+		cbBD=this.checked;
+		GenerateCode()
+	});
+	$("#GV").on("change", function () {
+		cbGV=this.checked;
+		GenerateCode()
+	});
+	$("#SV").on("change", function () {
+		cbSV=this.checked;
+		GenerateCode()
+	});
+	$("#BQ").on("change", function () {
+		cbBQ=this.checked;
+		GenerateCode()
+	});
+	$("#EQ").on("change", function () {
+		cbEQ=this.checked;
+		GenerateCode()
+	});
+	$("#OP").on("change", function () {
+		cbOP=this.checked;
+		GenerateCode()
+	});
+	$("#CP").on("change", function () {
+		cbCP=this.checked;
+		GenerateCode()
+	});
+	$("#HK").on("change", function () {
+		cbHK=this.checked;
+		GenerateCode()
+	});
+	$("#SS").on("change", function () {
+		cbSS=this.checked;
+		GenerateCode()
+	});
+	$("#EL").on("change", function () {
+		cbEL=this.checked;
+		GenerateCode()
+	});
+	$("#IQ").on("change", function () {
+		cbIQ=this.checked;
+		GenerateCode()
+	});
+	$("#ALL").on("click", function () {
+		$('#I').prop("checked",true).trigger("change");
+		$('#SU').prop("checked",true).trigger("change");
+		$('#BE').prop("checked",true).trigger("change");
+		$('#BD').prop("checked",true).trigger("change");
+		$('#GV').prop("checked",true).trigger("change");
+		$('#SV').prop("checked",true).trigger("change");
+		$('#BQ').prop("checked",true).trigger("change");
+		$('#EQ').prop("checked",true).trigger("change");
+		$('#OP').prop("checked",true).trigger("change");
+		$('#CP').prop("checked",true).trigger("change");
+		$('#HK').prop("checked",true).trigger("change");
+		$('#SS').prop("checked",true).trigger("change");
+		$('#EL').prop("checked",true).trigger("change");
+		$('#IQ').prop("checked",true).trigger("change");
+	});
+	$("#NONE").on("click", function () {
+		$('#I').prop("checked",false).trigger("change");
+		$('#SU').prop("checked",false).trigger("change");
+		$('#BE').prop("checked",false).trigger("change");
+		$('#BD').prop("checked",false).trigger("change");
+		$('#GV').prop("checked",false).trigger("change");
+		$('#SV').prop("checked",false).trigger("change");
+		$('#BQ').prop("checked",false).trigger("change");
+		$('#EQ').prop("checked",false).trigger("change");
+		$('#OP').prop("checked",false).trigger("change");
+		$('#CP').prop("checked",false).trigger("change");
+		$('#HK').prop("checked",false).trigger("change");
+		$('#SS').prop("checked",false).trigger("change");
+		$('#EL').prop("checked",false).trigger("change");
+		$('#IQ').prop("checked",false).trigger("change");
+	});
+	sortDropDownListByText("Object");
+
+	$(document).ready(function () {
+		GenerateCode();
+		SetDefault("Namer","name");
+		SetDefault("Object","object");
+		SetDefaultRadio("Comments","comments");
+		SetDefaultRadio("Logging","logging");
+		SetDefaultCheckbox("I");
+		SetDefaultCheckbox("SU");
+		SetDefaultCheckbox("BE");
+		SetDefaultCheckbox("BD");
+		SetDefaultCheckbox("GV");
+		SetDefaultCheckbox("SV");
+		SetDefaultCheckbox("BQ");
+		SetDefaultCheckbox("EQ");
+		SetDefaultCheckbox("OP");
+		SetDefaultCheckbox("CP");
+		SetDefaultCheckbox("HK");
+		SetDefaultCheckbox("SS");
+		SetDefaultCheckbox("EL");
+		SetDefaultCheckbox("IQ");
+		init=false;
+		GenerateCode();
+	});
+
+	function addCode(line) {
+		return line + "\n";
+	}
+
+	function addComment(line) {
+		return addComments ? line + "\n" : "";
+	}
+
+	function addPWLog(line) {
+		return addLogging ? '     SiebelJS.Log("TemplatePW: ' + line + "\");\n" : "";
+	}
+
+	function GenerateCode() {
+		strCode = "";
+		strCode += addCode('if (typeof (SiebelAppFacade.TemplatePW) === "undefined") {');
+		strCode += addCode('');
+		strCode += addCode(' SiebelJS.Namespace("SiebelAppFacade.TemplatePW");')
+		strCode += addCode(' define("siebel/custom/TemplatePW", [],');
+		strCode += addCode('  function () {');
+		strCode += addCode('   SiebelAppFacade.TemplatePW = (function () {');
+		strCode += addCode('');
+		strCode += addCode('    function TemplatePW(pm) {');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.constructor.apply(this, arguments);');
+		strCode += addCode('    }');
+		strCode += addCode('');
+		strCode += addCode('    SiebelJS.Extend(TemplatePW, SiebelAppFacade.' + storeDefExtPW[$("#Object").val() + "-ext"] + ');');
+		if (cbI) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.Init = function () {');
+		strCode += addComment('     // Init is called each time the object is initialised.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.Init.apply(this, arguments);');
+		strCode += addPWLog('     Init method reached.');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbSU) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.ShowUI = function () {');
+		strCode += addComment('     // ShowUI is called when the object is initially laid out.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     ShowUI method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.ShowUI.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbBD) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.BindData = function () {');
+		strCode += addComment('     // BindData is called each time the data set changes.');
+		strCode += addComment('     // This is where you\'ll bind that data to user interface elements you might have created in ShowUI');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     BindData method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.BindData.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbBE) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.BindEvents = function () {');
+		strCode += addComment('     // BindEvents is where we add UI event processing.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     BindEvents method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.BindEvents.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbGV) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.GetValue = function () {');
+		strCode += addComment('     // GetValue is called when the framework needs to retrieve the control value');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     GetValue method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.GetValue.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbSV) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.SetValue = function (value, index) {');
+		strCode += addComment('     // SetValue is called when the framework sets the control value');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     SetValue method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.SetValue.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbBQ) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.BeginQuery = function () {');
+		strCode += addComment('     // BeginQuery is called when the control should switch to query mode');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     BeginQuery method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.BeginQuery.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbEQ) {
+		strCode += addCode('');
+			strCode += addCode('    TemplatePW.prototype.EndQuery = function () {');
+		strCode += addComment('     // EndQuery is called when the control should leave query mode');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     EndQuery method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.EndQuery.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbOP) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.OpenPopup = function () {');
+		strCode += addComment('     // OpenPopup is called when the control receives a signal to open its popup');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     OpenPopup method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.OpenPopup.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbCP) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.ClosePopup = function () {');
+		strCode += addComment('     // ClosePopup is called when the control receives a signal to close its popup.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     ClosePopup method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.ClosePopup.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbHK) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.HandleKey = function (el, event, val) {');
+		strCode += addComment('     // HandleKey is used to handle key commands.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     HandleKey method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.HandleKey.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbSS) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.SetState = function (state, flag, index) {');
+		strCode += addComment('     // SetState is called when the framework needs to set the control state.');
+		strCode += addComment('     // state will be one of ');
+		strCode += addComment('     //  consts.get("EDITABLE")');
+		strCode += addComment('     //  consts.get("ENABLE")');
+		strCode += addComment('     //  consts.get("SHOW")');
+		strCode += addComment('     //  consts.get("FOCUS")');
+		strCode += addComment('     // flag will be true or false');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     SetState method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.SetState.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbEL) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.EndLife = function () {');
+		strCode += addComment('     // EndLife is used to perform any necessary cleanup.');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     EndLife method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.EndLife.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		if (cbIQ) {
+		strCode += addCode('');
+		strCode += addCode('    TemplatePW.prototype.InjectQTPInfo = function (el) {');
+		strCode += addComment('     // InjectQTPInfo is used to inject the automation attributes ot (object type), un (UI name), and rn (repository name).');
+		strCode += addComment('     // Add code here that should happen before default processing');
+		strCode += addPWLog('     InjectQTPInfo method reached.');
+		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.InjectQTPInfo.apply(this, arguments);');
+		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('    }');
+		}
+		strCode += addCode('');
+		strCode += addCode('    return TemplatePW;');
+		strCode += addCode('   }()');
+		strCode += addCode('  );');
+		strCode += addCode('  ');
+		strCode += addCode('  SiebelApp.S_App.PluginBuilder.AttachPW(consts.get("'+storeDefExtPW[$("#Object").val() + "-const"]+'"), SiebelAppFacade.TemplatePW, function (control, objName) {');
+	 strCode += addComment('   // Return true here when you want the custom PW to be applied.');
+	 strCode += addComment('   // In the future, this will be controlled by manifest admin.');
+	 strCode += addComment('   // An example would be to use a control property to decide when to return true, e.g.');
+	 strCode += addComment('   // return control.GetPMPropSet()&&control.GetPMPropSet().GetProperty("style").toLowerCase()=="slider";');
+		strCode += addCode('   return true;');
+		strCode += addCode('  });');
+		strCode += addCode('  ');
+		strCode += addCode('  return "SiebelAppFacade.TemplatePW";');
+		strCode += addCode(' })');
+		strCode += addCode('}');
+
+		strCode = strCode.replace(/TemplatePW/g, $("#Namer").val() + "PW");
+		$("#instruction").html("Copy and save the code below in your custom folder and call it <code>"+$("#Namer").val() + "PW.js</code>. Get the <strong>cASe</strong> right, it's important.")
+		try{
+			if (!tweaked) {
+				$(parent.document.body).find("#head").remove();
+				$(parent.document.head).prepend("<title>Siebel PW Code Generator</title>")
+				$(parent.document.body).append("<style>#tabs #result.tCont {padding: 0;}</style>");
+				tweaked=true;
+			}
+			if (!init) {
+				var url = "object="+$("#Object").val();
+				url += "&name="+$("#Namer").val();
+				url += "&comments="+(addComments?"Yes":"No");
+				url += "&logging="+(addLogging?"Yes":"No");
+				url += "&I="+(cbI?"Y":"N");
+				url += "&SU="+(cbSU?"Y":"N");
+				url += "&BD="+(cbBD?"Y":"N");
+				url += "&BE="+(cbBE?"Y":"N");
+				url += "&GV="+(cbGV?"Y":"N");
+				url += "&SV="+(cbSV?"Y":"N");
+				url += "&BQ="+(cbBQ?"Y":"N");
+				url += "&EQ="+(cbEQ?"Y":"N");
+				url += "&OP="+(cbOP?"Y":"N");
+				url += "&CP="+(cbCP?"Y":"N");
+				url += "&HK="+(cbHK?"Y":"N");
+				url += "&SS="+(cbSS?"Y":"N");
+				url += "&EL="+(cbEL?"Y":"N");
+				url += "&IQ="+(cbIQ?"Y":"N");
+				parent.history.replaceState({}, parent.document.title, "?"+url)
+				strCode=addCode("//Regenerate using:"+parent.document.location.href)+strCode;
+			}
+		}catch(e){}
+		
+		if (integration != "Y") {
+			$("#code").text(strCode);
+		
+			$('.code').each(function () {
+				var $this = $(this),
+					$code = $this.html(),
+					$unescaped = $('<div/>').html($code).text();
+				$this.empty();
+				CodeMirror(this, {
+					value: $unescaped,
+					mode: 'javascript',
+					lineNumbers: !$this.is('.inline'),
+					readOnly: true
+				});
+			});
+		} else {
+			document.body.innerHTML = "<pre>"+strCode+"</pre>";
+		}
+	}
+
+	function getQueryVariable(variable) {
+		var query = parent.location.search.substring(1);
+		var vars = query.split('&');
+		for (var i = 0; i < vars.length; i++) {
+			var pair = vars[i].split('=');
+			if (pair[0] == variable) {
+				return pair[1];
+			}
+		}
+		console.log('Query variable %s not found', variable);
+	}
+
+	function SetDefault (input, qs) {
+		if (getQueryVariable(qs)!=undefined) {
+			$("#"+input).val(getQueryVariable(qs));
+			GenerateCode();
+		}
+	}
+
+	function SetDefaultRadio (input, qs) {
+		if (getQueryVariable(qs)!=undefined) {
+			$('input:radio[name='+input+']').filter('[value='+getQueryVariable(qs)+']').prop('checked', true).trigger("click");
+		}
+	}
+
+	function SetDefaultCheckbox (qs) {
+		if (getQueryVariable(qs)!=undefined) {
+			$('#'+qs).prop("checked",getQueryVariable(qs)=="Y").trigger("change");
+		}
+	}
+
+	function sortDropDownListByText(selectId) {
+		var foption = $('#'+ selectId + ' option:first');
+		var soptions = $('#'+ selectId + ' option:not(:first)').sort(function(a, b) {
+		   return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+		});
+		$('#' + selectId).html(soptions).prepend(foption);              
+
+	};
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  setTimeout(function(){
+    ga('create', 'UA-56575497-2', 'auto');
+    ga('send', 'pageview');
+  },0);
+
+</script>
