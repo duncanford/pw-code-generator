@@ -471,6 +471,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	sortDropDownListByText("Object");
 
 	$(document).ready(function () {
+		bindEvents();
 		GenerateCode();
 		SetDefault("Namer","name");
 		SetDefault("Object","object");
@@ -492,7 +493,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		SetDefaultCheckbox("IQ");
 		init=false;
 		GenerateCode();
-		bindEvents();
 	});
 
 	function addCode(line) {
