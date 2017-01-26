@@ -512,7 +512,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		strCode += addCode('if (typeof (SiebelAppFacade.TemplatePW) === "undefined") {');
 		strCode += addCode('');
 		strCode += addCode(' SiebelJS.Namespace("SiebelAppFacade.TemplatePW");')
-		strCode += addCode(' define("siebel/custom/TemplatePW", [],');
+		strCode += addCode(' define("siebel/custom/TemplatePW", ["siebel/basepw"],');
 		strCode += addCode('  function () {');
 		strCode += addCode('   SiebelAppFacade.TemplatePW = (function () {');
 		strCode += addCode('');
