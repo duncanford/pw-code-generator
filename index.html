@@ -568,8 +568,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 		strCode += addComment('     // GetValue is called when the framework needs to retrieve the control value');
 		strCode += addComment('     // Add code here that should happen before default processing');
 		strCode += addPWLog('     GetValue method reached.');
-		strCode += addCode('     SiebelAppFacade.TemplatePW.superclass.GetValue.apply(this, arguments);');
+		strCode += addCode('     var retVal = SiebelAppFacade.TemplatePW.superclass.GetValue.apply(this, arguments);');
 		strCode += addComment('     // Add code here that should happen after default processing');
+		strCode += addCode('     return (retVal);');
 		strCode += addCode('    }');
 		}
 		if (cbSV) {
